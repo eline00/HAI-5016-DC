@@ -5,6 +5,7 @@ import sys
 from google import genai
 import json
 from pathlib import Path
+import datetime  # added so we can tell the model today's date
 
 # Load variables from .env into the environment
 load_dotenv()
@@ -64,7 +65,9 @@ try:
             continue
 
         # Build a simple conversation string from recent memory + current input
-        convo_parts = []
+        # Add the current date/time so the model knows today's date
+        current_dt = datetime.datetime.now().astimezone().isoformat()
+        convo_parts = [f"Current date: {current_dt}"]
         for ex in memory[-MAX_MEMORY:]:
             convo_parts.append(f"User: {ex.get('user')}\nAI: {ex.get('ai')}")
         convo_parts.append(f"User: {user_input}")
